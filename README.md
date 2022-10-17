@@ -2,6 +2,8 @@
 
 This repository contains the different projects I've done during my Data Scientist training at OpenClassrooms.
 
+The *my_functions.py* file is a module containing functions used in some projects.
+
 # Data sets
 
 The data sets of the projects can be found at the following addresses :
