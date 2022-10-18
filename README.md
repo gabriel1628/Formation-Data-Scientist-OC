@@ -10,3 +10,4 @@ The data sets of the projects can be found at the following addresses :
 
 - For Project 2 : https://datacatalog.worldbank.org/search/dataset/0038480
 - For Project 3 : https://world.openfoodfacts.org/data
+- For Project 4 : https://data.seattle.gov/dataset/2016-Building-Energy-Benchmarking/2bpz-gwpy
