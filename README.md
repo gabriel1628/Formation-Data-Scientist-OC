@@ -12,3 +12,4 @@ The data sets of the projects can be found at the following addresses :
 - For Project 3 : https://world.openfoodfacts.org/data
 - For Project 4 : https://data.seattle.gov/dataset/2016-Building-Energy-Benchmarking/2bpz-gwpy
 - For Project 5 : https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+- For Project 7 : https://www.kaggle.com/c/home-credit-default-risk/data
