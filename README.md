@@ -2,7 +2,8 @@
 
 This repository contains the different projects I've done during my Data Scientist training at OpenClassrooms.
 
-The *my_functions.py* file is a module containing functions used in some projects.
+The *my_functions.py* file is a module containing functions used in some projects. You can put it in a directory which
+is part of the Python *search path* such as the `site-packages` directory in order to import easily its functions.
 
 # Data sets
 
