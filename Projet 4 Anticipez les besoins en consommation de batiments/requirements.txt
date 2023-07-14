@@ -1,0 +1,8 @@
+black
+isort
+pandas
+matplotlib
+seaborn
+scikit-learn
+category_encoders
+shap
