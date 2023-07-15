@@ -1,6 +1,7 @@
 black
 isort
 pandas
+scipy
 matplotlib
 seaborn
 scikit-learn
