@@ -1,0 +1,8 @@
+- Ajouter un gitignore par projet (dans une autre branche)
+- Modifier les noms des fichiers
+- Continuer l'EDA
+    - Définir une fonction pour tracer les graphes
+    - continuer à partir de Relation Target / Variables flottantes
+- Modéliser avec peu de variables
+- Comparer les modèles avec Lazy Predict
+- Faire un README
