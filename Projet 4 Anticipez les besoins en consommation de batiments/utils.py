@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 from scipy import stats
+import time
+from sklearn.pipeline import make_pipeline
 
 def print_correlations(df, min_corr, max_corr=1, print_correlations=True, return_variables=False):
     corr = df.corr(numeric_only=True)
@@ -80,3 +82,85 @@ def anova(X_name, Y_name, data, print_values=False):
         
     
     return eta_sqrd, p
+
+
+def model_evaluation(model, name, X_train, y_train, X_test, y_test):
+    """
+    Evaluate a machine learning model's performance.
+
+    Parameters:
+    - model (object): The machine learning model to be evaluated.
+    - name (str): The name of the model.
+    - X_train (array-like): Training data features.
+    - y_train (array-like): Training data target.
+    - X_test (array-like): Test data features.
+    - y_test (array-like): Test data target.
+
+    Returns:
+    - results (list): List containing model evaluation results:
+        [name, train_score, test_score, fit_time, predict_time]
+    """
+    t0 = time.time()
+    model.fit(X_train, y_train)
+    t1 = time.time()
+    fit_time = t1 - t0
+
+    t2 = time.time()
+    y_pred = model.predict(X_test)
+    t3 = time.time()
+    predict_time = t3 - t2
+
+    train_score = model.score(X_train, y_train)
+    test_score = model.score(X_test, y_test)
+
+    results = [name, train_score, test_score, fit_time, predict_time]
+
+    intpart_len = len(f'{int(fit_time)}')
+    if intpart_len >= 4:
+        fit_time = int(fit_time)
+    else:
+        fit_time = round(fit_time, 4 - intpart_len)
+
+    formatter_result = (
+        f"{name:12s}\t\t {train_score:.3f}\t\t {test_score:.3f}\t\t {fit_time}s\t\t {predict_time:.3f}s"
+    )
+    print(formatter_result.format(*results))
+
+    return results
+
+
+def model_comparison(models, X_train, y_train, X_test, y_test, preprocessing_pipeline=None):
+    """
+    Compare the performance of multiple machine learning models.
+
+    Parameters:
+    - models (dict): A dictionary containing model names as keys and corresponding model objects as values.
+    - X_train (array-like): Training data features.
+    - y_train (array-like): Training data target.
+    - X_test (array-like): Test data features.
+    - y_test (array-like): Test data target.
+    - preprocessing_pipeline (object, optional): Preprocessing pipeline to be applied before fitting the models.
+
+    Returns:
+    - model_results (DataFrame): A DataFrame containing model comparison results.
+    """
+    list_results = []
+    print(85 * "_")
+    print("model\t\t\t train_score\t test_score\t fit_time\t predict_time")
+    print(85 * "=")
+    for name, model in models.items():
+        if preprocessing_pipeline is not None:
+            pipeline = make_pipeline(preprocessing_pipeline, model)
+            results = model_evaluation(pipeline, name, X_train, y_train, X_test, y_test)
+        else:
+            results = model_evaluation(model, name, X_train, y_train, X_test, y_test)
+        list_results.append(results)
+        print(85 * "-")
+
+    model_results = pd.DataFrame(
+        {results[0]: results[1:] for results in list_results},
+        index=['train_score', 'test_score', 'fit_time', 'predict_time']
+    ).T.round(4)
+
+    model_results.index.name = 'model'
+    return model_results
