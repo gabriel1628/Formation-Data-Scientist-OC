@@ -3,6 +3,7 @@ import numpy as np
 from scipy import stats
 import time
 from sklearn.pipeline import make_pipeline
+from sklearn.metrics import r2_score, mean_absolute_percentage_error, mean_absolute_error, median_absolute_error
 
 def print_correlations(df, min_corr, max_corr=1, print_correlations=True, return_variables=False):
     corr = df.corr(numeric_only=True)
@@ -84,7 +85,7 @@ def anova(X_name, Y_name, data, print_values=False):
     return eta_sqrd, p
 
 
-def model_evaluation(model, name, X_train, y_train, X_test, y_test):
+def model_evaluation_1(model, name, X_train, y_train, X_test, y_test):
     """
     Evaluate a machine learning model's performance.
 
@@ -151,9 +152,9 @@ def model_comparison(models, X_train, y_train, X_test, y_test, preprocessing_pip
     for name, model in models.items():
         if preprocessing_pipeline is not None:
             pipeline = make_pipeline(preprocessing_pipeline, model)
-            results = model_evaluation(pipeline, name, X_train, y_train, X_test, y_test)
+            results = model_evaluation_1(pipeline, name, X_train, y_train, X_test, y_test)
         else:
-            results = model_evaluation(model, name, X_train, y_train, X_test, y_test)
+            results = model_evaluation_1(model, name, X_train, y_train, X_test, y_test)
         list_results.append(results)
         print(85 * "-")
 
@@ -164,3 +165,33 @@ def model_comparison(models, X_train, y_train, X_test, y_test, preprocessing_pip
 
     model_results.index.name = 'model'
     return model_results
+
+
+def model_evaluation_2(model, X_train, X_test, y_train, y_test, return_preds=False):
+    y_fit = model.predict(X_train)
+    y_pred = model.predict(X_test)
+
+    # compute scores
+    train_r2 = r2_score(y_train, y_fit).round(3)
+    test_r2 = r2_score(y_test, y_pred).round(3)
+    train_mape = mean_absolute_percentage_error(y_train, y_fit).round(3)
+    test_mape = mean_absolute_percentage_error(y_test, y_pred).round(3)
+    train_mae = mean_absolute_error(y_train, y_fit).round(3)
+    test_mae = mean_absolute_error(y_test, y_pred).round(3)
+    train_medae = median_absolute_error(y_train, y_fit).round(3)
+    test_medae = median_absolute_error(y_test, y_pred).round(3)
+
+    # print results
+    table = [
+        ["Score", "Train", "Test"],
+        ["R2", train_r2, test_r2],
+        ["MAPE", train_mape, test_mape],
+        ["MAE", train_mae, test_mae],
+        ["MedAE", train_medae, test_medae]
+    ]
+    col_width = 15  # You can adjust this based on your data
+    for row in table:
+        print("".join(str(word).ljust(col_width) for word in row))
+        
+    if return_preds:
+        return y_fit, y_pred
